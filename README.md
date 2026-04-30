@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="public\logo\shanyraq-full.png" alt="Logo" width="400px"/>
+    <img src="public\logo\shanyraq-full.svg" alt="Logo" width="400px"/>
 </p>
 
 ---
