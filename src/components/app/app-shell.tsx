@@ -11,6 +11,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ShieldCheck,
+  UserPlus,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import type { Locale, SessionUser } from "@/lib/domain";
 import { getDictionary, roleLabel } from "@/lib/i18n";
+import { can } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -32,21 +34,26 @@ const nav = [
   { key: "finance", href: "finance", icon: Landmark },
   { key: "approvals", href: "approvals", icon: ClipboardCheck },
   { key: "audit", href: "audit", icon: ShieldCheck },
+  { key: "access", href: "access", icon: UserPlus, permission: "access:review", label: "Access" },
 ] as const;
 
 function NavLinks({
   locale,
   labels,
+  user,
   collapsed = false,
 }: {
   locale: Locale;
   labels: ReturnType<typeof getDictionary>["nav"];
+  user: SessionUser;
   collapsed?: boolean;
 }) {
   return (
     <nav className="grid gap-1" aria-label="Main navigation">
       {nav.map((item) => {
+        if ("permission" in item && !can(user.role, item.permission)) return null;
         const Icon = item.icon;
+        const label = (labels as Record<string, string>)[item.key] ?? ("label" in item ? item.label : item.key);
         return (
           <Button
             key={item.href}
@@ -57,11 +64,11 @@ function NavLinks({
               "text-muted-foreground",
               collapsed ? "mx-auto h-10 w-10" : "justify-start gap-3 px-3",
             )}
-            title={labels[item.key]}
+            title={label}
           >
             <Link href={`/${locale}/${item.href}`}>
               <Icon className="h-4 w-4" />
-              <span className={collapsed ? "sr-only" : ""}>{labels[item.key]}</span>
+              <span className={collapsed ? "sr-only" : ""}>{label}</span>
             </Link>
           </Button>
         );
@@ -88,7 +95,7 @@ function SidebarContent({
       </div>
 
       <Separator className="my-5" />
-      <NavLinks locale={locale} labels={dictionary.nav} collapsed={collapsed} />
+      <NavLinks locale={locale} labels={dictionary.nav} user={user} collapsed={collapsed} />
 
       <div
         className={cn(

@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { signInAction } from "@/app/actions";
 import { BrandLogo } from "@/components/app/brand-logo";
 import { LoginSubmitButton } from "@/components/app/login-submit-button";
 import { ThemeToggle } from "@/components/app/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,10 +17,10 @@ export default async function LoginPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; registered?: string }>;
 }) {
   const { locale: rawLocale } = await params;
-  const { error } = await searchParams;
+  const { error, registered } = await searchParams;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const currentUser = await getCurrentUser();
   if (currentUser) redirect(`/${locale}/dashboard`);
@@ -52,8 +54,16 @@ export default async function LoginPage({
                 <Label htmlFor="password">{dictionary.password}</Label>
                 <Input id="password" name="password" type="password" autoComplete="current-password" required />
               </div>
+              {registered ? (
+                <p className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">
+                  Access request submitted. A manager or auditor must approve it before you can sign in.
+                </p>
+              ) : null}
               {error ? <p className="text-sm text-red-300">{dictionary.invalidLogin}</p> : null}
               <LoginSubmitButton label={dictionary.signIn} />
+              <Button asChild variant="ghost">
+                <Link href={`/${locale}/register`}>Request access</Link>
+              </Button>
             </form>
           </CardContent>
         </Card>

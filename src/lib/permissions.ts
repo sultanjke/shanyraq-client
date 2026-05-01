@@ -8,13 +8,14 @@ export type Permission =
   | "approval:vote"
   | "risk:run"
   | "risk:resolve"
-  | "audit:export";
+  | "audit:export"
+  | "access:review";
 
 const rolePermissions: Record<UserRole, Permission[]> = {
   resident: ["approval:vote", "audit:export"],
-  manager: ["document:upload", "finance:publish", "approval:create", "audit:export"],
+  manager: ["document:upload", "finance:publish", "approval:create", "audit:export", "access:review"],
   contractor: ["document:upload"],
-  auditor: ["document:verify", "risk:run", "risk:resolve", "audit:export"],
+  auditor: ["document:verify", "risk:run", "risk:resolve", "audit:export", "access:review"],
 };
 
 export function can(role: UserRole, permission: Permission) {

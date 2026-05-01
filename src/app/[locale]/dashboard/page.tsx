@@ -20,9 +20,9 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
 
   const openRisks = data.risks.filter((risk) => risk.status !== "resolved").length;
   const verifiedDocuments = data.documents.filter((document) => document.currentStatus === "verified").length;
-  const documentCompleteness = Math.round((verifiedDocuments / data.documents.length) * 100);
+  const documentCompleteness = data.documents.length > 0 ? Math.round((verifiedDocuments / data.documents.length) * 100) : 0;
   const publishedExpenses = data.expenses.filter((expense) => expense.status === "published").length;
-  const auditedTransactions = Math.round((publishedExpenses / data.expenses.length) * 100);
+  const auditedTransactions = data.expenses.length > 0 ? Math.round((publishedExpenses / data.expenses.length) * 100) : 0;
   const participation = Math.min(100, data.votes.length * 32 + 32);
   const totalExpense = data.expenses.reduce((sum, expense) => sum + expense.amountKzt, 0);
 

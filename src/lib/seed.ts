@@ -464,5 +464,6 @@ export function cloneSeedState() {
     approvals: structuredClone(seedApprovals),
     votes: structuredClone(seedVotes),
     auditEvents: structuredClone(seedAuditEvents),
+    registrationRequests: [],
   };
 }

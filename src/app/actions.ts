@@ -10,14 +10,17 @@ import { z } from "zod";
 import { clearSession, requireUser, setSession } from "@/lib/auth";
 import { isLocale, type Locale, type SessionUser, type VoteChoice } from "@/lib/domain";
 import { assertCan } from "@/lib/permissions";
-import { verifyPassword } from "@/lib/password";
+import { hashPassword, verifyPassword } from "@/lib/password";
 import {
+  approveRegistrationRequest,
   castVote,
   createApproval,
   exportAuditLines,
   getUserByEmail,
   publishExpenseReport,
+  rejectRegistrationRequest,
   runRiskChecks,
+  submitRegistrationRequest,
   uploadDocumentVersion,
   verifyDocument,
 } from "@/lib/store";
@@ -25,6 +28,23 @@ import {
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
+  locale: z.string().default("en"),
+});
+
+const roleSchema = z.enum(["resident", "manager", "contractor", "auditor"]);
+
+const registerSchema = z.object({
+  name: z.string().trim().min(2),
+  email: z.string().trim().email(),
+  password: z.string().min(8),
+  requestedRole: roleSchema,
+  buildingId: z.string().trim().optional(),
+  buildingName: z.string().trim().min(2),
+  buildingAddress: z.string().trim().min(2),
+  city: z.string().trim().min(2),
+  unit: z.string().trim().optional(),
+  organizationName: z.string().trim().optional(),
+  evidenceNote: z.string().trim().min(10),
   locale: z.string().default("en"),
 });
 
@@ -93,6 +113,46 @@ export async function signInAction(formData: FormData) {
     unit: user.unit,
   });
   redirect(`/${locale}/dashboard`);
+}
+
+export async function registerAction(formData: FormData) {
+  const parsed = registerSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    requestedRole: formData.get("requestedRole"),
+    buildingId: formData.get("buildingId"),
+    buildingName: formData.get("buildingName"),
+    buildingAddress: formData.get("buildingAddress"),
+    city: formData.get("city"),
+    unit: formData.get("unit"),
+    organizationName: formData.get("organizationName"),
+    evidenceNote: formData.get("evidenceNote"),
+    locale: formData.get("locale"),
+  });
+
+  const locale = parsed.success && isLocale(parsed.data.locale) ? parsed.data.locale : "en";
+  if (!parsed.success) redirect(`/${locale}/register?error=validation`);
+
+  try {
+    await submitRegistrationRequest({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      passwordHash: hashPassword(parsed.data.password),
+      requestedRole: parsed.data.requestedRole,
+      buildingId: parsed.data.buildingId && parsed.data.buildingId !== "new" ? parsed.data.buildingId : null,
+      buildingName: parsed.data.buildingName,
+      buildingAddress: parsed.data.buildingAddress,
+      city: parsed.data.city,
+      unit: parsed.data.unit || null,
+      organizationName: parsed.data.organizationName || null,
+      evidenceNote: parsed.data.evidenceNote,
+    });
+  } catch {
+    redirect(`/${locale}/register?error=duplicate`);
+  }
+
+  redirect(`/${locale}/login?registered=1`);
 }
 
 export async function signOutAction(formData: FormData) {
@@ -183,4 +243,33 @@ export async function exportAuditLogAction(locale: Locale) {
   const user = await actor(locale);
   assertCan(user.role, "audit:export");
   return exportAuditLines(user);
+}
+
+export async function approveRegistrationRequestAction(formData: FormData) {
+  const locale = formLocale(formData);
+  const user = await actor(locale);
+  assertCan(user.role, "access:review");
+
+  const requestId = String(formData.get("requestId") ?? "");
+  if (requestId) {
+    await approveRegistrationRequest(requestId, user);
+  }
+  revalidatePath(`/${locale}/access`);
+  revalidatePath(`/${locale}/audit`);
+  redirect(`/${locale}/access?reviewed=1`);
+}
+
+export async function rejectRegistrationRequestAction(formData: FormData) {
+  const locale = formLocale(formData);
+  const user = await actor(locale);
+  assertCan(user.role, "access:review");
+
+  const requestId = String(formData.get("requestId") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim() || "Access evidence was not sufficient.";
+  if (requestId) {
+    await rejectRegistrationRequest(requestId, user, reason);
+  }
+  revalidatePath(`/${locale}/access`);
+  revalidatePath(`/${locale}/audit`);
+  redirect(`/${locale}/access?reviewed=1`);
 }

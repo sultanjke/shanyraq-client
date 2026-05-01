@@ -6,6 +6,7 @@ export type DocumentStatus = "draft" | "review" | "verified" | "blocked";
 export type RiskSeverity = "info" | "review" | "critical" | "resolved";
 export type ApprovalStatus = "pending" | "approved" | "rejected" | "expired";
 export type VoteChoice = "yes" | "no";
+export type RegistrationStatus = "pending" | "approved" | "rejected";
 
 export type LocalizedText = Record<Locale, string>;
 
@@ -131,6 +132,26 @@ export interface AuditEvent {
   metadata: Record<string, unknown>;
   previousHash: string;
   eventHash: string;
+  createdAt: string;
+}
+
+export interface RegistrationRequest {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  requestedRole: UserRole;
+  buildingId?: string | null;
+  buildingName: string;
+  buildingAddress: string;
+  city: string;
+  unit?: string | null;
+  organizationName?: string | null;
+  evidenceNote: string;
+  status: RegistrationStatus;
+  reviewedBy?: string | null;
+  reviewedAt?: string | null;
+  rejectionReason?: string | null;
   createdAt: string;
 }
 

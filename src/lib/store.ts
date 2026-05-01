@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getDb, hasDatabaseUrl } from "@/db/client";
 import {
   approvals as approvalsTable,
@@ -8,7 +8,9 @@ import {
   documentVersions as documentVersionsTable,
   documents as documentsTable,
   expenses as expensesTable,
+  memberships as membershipsTable,
   procurements as procurementsTable,
+  registrationRequests as registrationRequestsTable,
   riskFlags as riskFlagsTable,
   users as usersTable,
   votes as votesTable,
@@ -24,10 +26,12 @@ import type {
   Expense,
   LocalizedText,
   Procurement,
+  RegistrationRequest,
   RepositoryDocument,
   RiskFlag,
   SessionUser,
   User,
+  UserRole,
   Vote,
   VoteChoice,
 } from "@/lib/domain";
@@ -56,6 +60,7 @@ interface DemoState {
   approvals: Approval[];
   votes: Vote[];
   auditEvents: AuditEvent[];
+  registrationRequests: RegistrationRequest[];
 }
 
 type StoreMode = "memory" | "postgres";
@@ -198,6 +203,28 @@ function mapAudit(row: typeof auditEventsTable.$inferSelect): AuditEvent {
   };
 }
 
+function mapRegistrationRequest(row: typeof registrationRequestsTable.$inferSelect): RegistrationRequest {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    passwordHash: row.passwordHash,
+    requestedRole: row.requestedRole as UserRole,
+    buildingId: row.buildingId,
+    buildingName: row.buildingName,
+    buildingAddress: row.buildingAddress,
+    city: row.city,
+    unit: row.unit,
+    organizationName: row.organizationName,
+    evidenceNote: row.evidenceNote,
+    status: row.status as RegistrationRequest["status"],
+    reviewedBy: row.reviewedBy,
+    reviewedAt: iso(row.reviewedAt),
+    rejectionReason: row.rejectionReason,
+    createdAt: iso(row.createdAt) ?? new Date().toISOString(),
+  };
+}
+
 function mapVersion(row: typeof documentVersionsTable.$inferSelect): DocumentVersion {
   return {
     id: row.id,
@@ -322,7 +349,29 @@ export async function getUserById(id: string) {
   return rows[0] ? toSessionUser(mapUser(rows[0])) : null;
 }
 
+export async function listBuildings(): Promise<Building[]> {
+  if ((await getMode()) === "memory") {
+    return [getMemoryState().building];
+  }
+
+  return (await getDb().select().from(buildingsTable).orderBy(buildingsTable.name)).map(mapBuilding);
+}
+
+async function getUserBuildingId(user: SessionUser) {
+  if ((await getMode()) === "memory") return DEMO_BUILDING_ID;
+
+  const [membership] = await getDb()
+    .select()
+    .from(membershipsTable)
+    .where(eq(membershipsTable.userId, user.id))
+    .limit(1);
+
+  return membership?.buildingId ?? DEMO_BUILDING_ID;
+}
+
 export async function getDashboardData(user: SessionUser): Promise<DashboardData> {
+  const buildingId = await getUserBuildingId(user);
+
   if ((await getMode()) === "memory") {
     const state = getMemoryState();
     return {
@@ -339,12 +388,12 @@ export async function getDashboardData(user: SessionUser): Promise<DashboardData
   }
 
   const db = getDb();
-  const [buildingRow] = await db.select().from(buildingsTable).where(eq(buildingsTable.id, DEMO_BUILDING_ID)).limit(1);
-  const documentRows = await db.select().from(documentsTable).where(eq(documentsTable.buildingId, DEMO_BUILDING_ID));
+  const [buildingRow] = await db.select().from(buildingsTable).where(eq(buildingsTable.id, buildingId)).limit(1);
+  const documentRows = await db.select().from(documentsTable).where(eq(documentsTable.buildingId, buildingId));
   const versionRows = await db.select().from(documentVersionsTable);
 
   return {
-    building: mapBuilding(buildingRow),
+    building: buildingRow ? mapBuilding(buildingRow) : seedBuilding,
     user,
     documents: documentRows.map((document) =>
       mapDocument(
@@ -355,14 +404,14 @@ export async function getDashboardData(user: SessionUser): Promise<DashboardData
           .sort((a, b) => b.versionNo - a.versionNo),
       ),
     ),
-    risks: (await db.select().from(riskFlagsTable).where(eq(riskFlagsTable.buildingId, DEMO_BUILDING_ID))).map(mapRisk),
+    risks: (await db.select().from(riskFlagsTable).where(eq(riskFlagsTable.buildingId, buildingId))).map(mapRisk),
     procurements: (
-      await db.select().from(procurementsTable).where(eq(procurementsTable.buildingId, DEMO_BUILDING_ID))
+      await db.select().from(procurementsTable).where(eq(procurementsTable.buildingId, buildingId))
     ).map(mapProcurement),
-    expenses: (await db.select().from(expensesTable).where(eq(expensesTable.buildingId, DEMO_BUILDING_ID))).map(
+    expenses: (await db.select().from(expensesTable).where(eq(expensesTable.buildingId, buildingId))).map(
       mapExpense,
     ),
-    approvals: (await db.select().from(approvalsTable).where(eq(approvalsTable.buildingId, DEMO_BUILDING_ID))).map(
+    approvals: (await db.select().from(approvalsTable).where(eq(approvalsTable.buildingId, buildingId))).map(
       mapApproval,
     ),
     votes: (await db.select().from(votesTable)).map(mapVote),
@@ -370,7 +419,7 @@ export async function getDashboardData(user: SessionUser): Promise<DashboardData
       await db
         .select()
         .from(auditEventsTable)
-        .where(eq(auditEventsTable.buildingId, DEMO_BUILDING_ID))
+        .where(eq(auditEventsTable.buildingId, buildingId))
         .orderBy(desc(auditEventsTable.createdAt))
     ).map(mapAudit),
   };
@@ -382,10 +431,11 @@ export async function addAuditEvent(
   entityType: string,
   entityId: string,
   metadata: Record<string, unknown> = {},
+  buildingId = DEMO_BUILDING_ID,
 ) {
   const input = {
     id: randomUUID(),
-    buildingId: DEMO_BUILDING_ID,
+    buildingId,
     actorId: actor.id,
     actorName: actor.name,
     actorRole: actor.role,
@@ -411,6 +461,216 @@ export async function addAuditEvent(
     createdAt: new Date(event.createdAt),
   });
   return event;
+}
+
+export async function submitRegistrationRequest(input: {
+  name: string;
+  email: string;
+  passwordHash: string;
+  requestedRole: UserRole;
+  buildingId?: string | null;
+  buildingName: string;
+  buildingAddress: string;
+  city: string;
+  unit?: string | null;
+  organizationName?: string | null;
+  evidenceNote: string;
+}) {
+  const email = input.email.toLowerCase();
+
+  if ((await getMode()) === "memory") {
+    const state = getMemoryState();
+    const duplicateUser = state.users.some((user) => user.email.toLowerCase() === email);
+    const duplicateRequest = state.registrationRequests.some(
+      (request) => request.email.toLowerCase() === email && request.status === "pending",
+    );
+    if (duplicateUser || duplicateRequest) throw new Error("Registration request already exists.");
+
+    const request: RegistrationRequest = {
+      id: randomUUID(),
+      ...input,
+      email,
+      buildingId: input.buildingId ?? null,
+      unit: input.unit ?? null,
+      organizationName: input.organizationName ?? null,
+      status: "pending",
+      reviewedBy: null,
+      reviewedAt: null,
+      rejectionReason: null,
+      createdAt: new Date().toISOString(),
+    };
+    state.registrationRequests.unshift(request);
+    return request;
+  }
+
+  const db = getDb();
+  const existingUsers = await db.select({ id: usersTable.id }).from(usersTable).where(eq(usersTable.email, email)).limit(1);
+  const existingRequests = await db
+    .select({ id: registrationRequestsTable.id })
+    .from(registrationRequestsTable)
+    .where(eq(registrationRequestsTable.email, email))
+    .limit(1);
+  if (existingUsers.length > 0 || existingRequests.length > 0) {
+    throw new Error("Registration request already exists.");
+  }
+
+  const id = randomUUID();
+  await db.insert(registrationRequestsTable).values({
+    id,
+    ...input,
+    email,
+    buildingId: input.buildingId ?? null,
+    unit: input.unit ?? null,
+    organizationName: input.organizationName ?? null,
+    status: "pending",
+    createdAt: new Date(),
+  });
+
+  const [created] = await db.select().from(registrationRequestsTable).where(eq(registrationRequestsTable.id, id)).limit(1);
+  return mapRegistrationRequest(created);
+}
+
+export async function getRegistrationRequests() {
+  if ((await getMode()) === "memory") {
+    return [...getMemoryState().registrationRequests].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  return (await getDb().select().from(registrationRequestsTable).orderBy(desc(registrationRequestsTable.createdAt))).map(
+    mapRegistrationRequest,
+  );
+}
+
+export async function approveRegistrationRequest(requestId: string, actor: SessionUser) {
+  if ((await getMode()) === "memory") {
+    const state = getMemoryState();
+    const request = state.registrationRequests.find((item) => item.id === requestId);
+    if (!request || request.status !== "pending") return request ?? null;
+
+    const user: User = {
+      id: randomUUID(),
+      name: request.name,
+      email: request.email,
+      role: request.requestedRole,
+      passwordHash: request.passwordHash,
+      unit: request.unit ?? undefined,
+    };
+    state.users.push(user);
+    request.status = "approved";
+    request.reviewedBy = actor.id;
+    request.reviewedAt = new Date().toISOString();
+    await addAuditEvent(actor, `Approved access for ${request.email}`, "registration_request", request.id, {
+      requestedRole: request.requestedRole,
+      buildingName: request.buildingName,
+    });
+    return request;
+  }
+
+  const db = getDb();
+  const [requestRow] = await db
+    .select()
+    .from(registrationRequestsTable)
+    .where(eq(registrationRequestsTable.id, requestId))
+    .limit(1);
+  if (!requestRow || requestRow.status !== "pending") return requestRow ? mapRegistrationRequest(requestRow) : null;
+
+  const request = mapRegistrationRequest(requestRow);
+  let buildingId = request.buildingId ?? null;
+  if (!buildingId) {
+    buildingId = randomUUID();
+    await db.insert(buildingsTable).values({
+      id: buildingId,
+      name: request.buildingName,
+      address: request.buildingAddress,
+      city: request.city,
+      transparencyScore: 60,
+      createdAt: new Date(),
+    });
+  }
+
+  const [existingUser] = await db.select().from(usersTable).where(eq(usersTable.email, request.email)).limit(1);
+  const userId = existingUser?.id ?? randomUUID();
+  if (!existingUser) {
+    await db.insert(usersTable).values({
+      id: userId,
+      name: request.name,
+      email: request.email,
+      role: request.requestedRole,
+      passwordHash: request.passwordHash,
+      unit: request.unit ?? null,
+      createdAt: new Date(),
+    });
+  }
+
+  const [existingMembership] = await db
+    .select()
+    .from(membershipsTable)
+    .where(and(eq(membershipsTable.userId, userId), eq(membershipsTable.buildingId, buildingId)))
+    .limit(1);
+  if (!existingMembership) {
+    await db.insert(membershipsTable).values({
+      id: randomUUID(),
+      buildingId,
+      userId,
+      role: request.requestedRole,
+      status: "active",
+      unit: request.unit ?? null,
+    });
+  }
+
+  await db
+    .update(registrationRequestsTable)
+    .set({ status: "approved", reviewedBy: actor.id, reviewedAt: new Date() })
+    .where(eq(registrationRequestsTable.id, requestId));
+  await addAuditEvent(
+    actor,
+    `Approved access for ${request.email}`,
+    "registration_request",
+    request.id,
+    { requestedRole: request.requestedRole, buildingName: request.buildingName },
+    buildingId,
+  );
+
+  return { ...request, status: "approved", reviewedBy: actor.id, reviewedAt: new Date().toISOString() };
+}
+
+export async function rejectRegistrationRequest(requestId: string, actor: SessionUser, reason: string) {
+  if ((await getMode()) === "memory") {
+    const request = getMemoryState().registrationRequests.find((item) => item.id === requestId);
+    if (!request || request.status !== "pending") return request ?? null;
+    request.status = "rejected";
+    request.reviewedBy = actor.id;
+    request.reviewedAt = new Date().toISOString();
+    request.rejectionReason = reason;
+    await addAuditEvent(actor, `Rejected access for ${request.email}`, "registration_request", request.id, {
+      reason,
+      requestedRole: request.requestedRole,
+    });
+    return request;
+  }
+
+  const db = getDb();
+  const [requestRow] = await db
+    .select()
+    .from(registrationRequestsTable)
+    .where(eq(registrationRequestsTable.id, requestId))
+    .limit(1);
+  if (!requestRow || requestRow.status !== "pending") return requestRow ? mapRegistrationRequest(requestRow) : null;
+
+  const request = mapRegistrationRequest(requestRow);
+  await db
+    .update(registrationRequestsTable)
+    .set({ status: "rejected", reviewedBy: actor.id, reviewedAt: new Date(), rejectionReason: reason })
+    .where(eq(registrationRequestsTable.id, requestId));
+  await addAuditEvent(
+    actor,
+    `Rejected access for ${request.email}`,
+    "registration_request",
+    request.id,
+    { reason, requestedRole: request.requestedRole },
+    request.buildingId ?? DEMO_BUILDING_ID,
+  );
+
+  return { ...request, status: "rejected", reviewedBy: actor.id, reviewedAt: new Date().toISOString(), rejectionReason: reason };
 }
 
 export async function uploadDocumentVersion(input: {

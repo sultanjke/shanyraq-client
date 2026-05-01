@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -31,8 +30,11 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <Script id="theme-init" strategy="beforeInteractive">
-        {`
+      <head>
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `
           try {
             const saved = localStorage.getItem('shanyraq-theme');
             const theme = saved === 'light' ? 'light' : 'dark';
@@ -40,8 +42,10 @@ export default function RootLayout({
           } catch (_) {
             document.documentElement.classList.add('dark');
           }
-        `}
-      </Script>
+        `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <TooltipProvider>{children}</TooltipProvider>
       </body>

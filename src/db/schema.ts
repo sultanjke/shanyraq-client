@@ -39,11 +39,33 @@ export const memberships = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    role: text("role").notNull().default("resident"),
+    status: text("status").notNull().default("active"),
     unit: text("unit"),
     ownershipShare: numeric("ownership_share", { precision: 6, scale: 3 }),
   },
   (table) => [uniqueIndex("membership_building_user_idx").on(table.buildingId, table.userId)],
 );
+
+export const registrationRequests = pgTable("registration_requests", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  passwordHash: text("password_hash").notNull(),
+  requestedRole: text("requested_role").notNull(),
+  buildingId: uuid("building_id").references(() => buildings.id, { onDelete: "set null" }),
+  buildingName: text("building_name").notNull(),
+  buildingAddress: text("building_address").notNull(),
+  city: text("city").notNull(),
+  unit: text("unit"),
+  organizationName: text("organization_name"),
+  evidenceNote: text("evidence_note").notNull(),
+  status: text("status").notNull().default("pending"),
+  reviewedBy: uuid("reviewed_by").references(() => users.id, { onDelete: "set null" }),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  rejectionReason: text("rejection_reason"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const documents = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
