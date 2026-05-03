@@ -1,6 +1,6 @@
 # Shanyraq Statistical Analysis Report
 
-Date: 2026-05-04  
+Date: 2026-05-04
 Project: Shanyraq, apartment construction and building-management transparency platform for Kazakhstan
 
 ## 1. Executive Summary
@@ -132,7 +132,3 @@ Sources: Aula.kz public website, Apsiyon product page, Livly product page, Bank 
 - Official Information Source of the Prime Minister, construction-sector review: <https://primeminister.kz/en/news/reviews/record-housing-commissioning-digitalization-of-processes-and-support-for-ppps-implementation-of-the-presidents-instructions-in-the-construction-sector-30371>
 - Transparency International, CPI 2025 regional press page: <https://www.transparency.org/en/press/corruption-perceptions-index-2025-weak-institutions-fuelling-corruption-eastern-europe-central-asia>
 - Transparency International, CPI 2025 maps PDF: <https://www.transparency.de/fileadmin/Redaktion/Aktuelles/2026/CPI_2025/CPI2025_FINAL_ALL_MAPS_EN.pdf>
-- Aula.kz: <https://aula.kz/ru>
-- Apsiyon: <https://www.apsiyon.com/en/resident/mobile-app>
-- Livly: <https://www.livly.io/>
-- Bank CenterCredit POA news: <https://testbcc.amphibia.kz/en/about/press-center/news/osi-management-bcc-app/>
