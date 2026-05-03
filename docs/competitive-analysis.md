@@ -1,7 +1,4 @@
-# Shanyraq Competitive Analysis Report
-
-Date: 2026-05-04  
-Project: Shanyraq, apartment construction and building-management transparency platform for Kazakhstan
+# Shanyraq — Competitive Analysis
 
 ## 1. Executive Summary
 

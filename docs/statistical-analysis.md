@@ -1,7 +1,4 @@
-# Shanyraq Statistical Analysis Report
-
-Date: 2026-05-04
-Project: Shanyraq, apartment construction and building-management transparency platform for Kazakhstan
+# Shanyraq — Statistical Analysis
 
 ## 1. Executive Summary
 
