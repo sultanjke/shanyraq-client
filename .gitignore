@@ -46,3 +46,11 @@ dev-server*.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# others
+.agents
+.claude
+CLAUDE.md
+AGENTS.md
+skills-lock.json
+
