@@ -14,7 +14,7 @@ export function BrandLogo({
     return (
       <span className={cn("relative inline-grid items-center", baseClassName, className)}>
         <Image
-          src="/logo/shanyraq-black.svg"
+          src="/logo/sh-bl-compact.svg"
           alt="Shanyraq"
           width={205}
           height={117}
@@ -22,7 +22,7 @@ export function BrandLogo({
           className="col-start-1 row-start-1 h-auto w-full object-contain opacity-100 transition-opacity duration-200 dark:opacity-0"
         />
         <Image
-          src="/logo/shanyraq-white.svg"
+          src="/logo/sh-wh-compact.svg"
           alt="Shanyraq"
           width={229}
           height={117}
@@ -36,7 +36,7 @@ export function BrandLogo({
   return (
     <span className={cn("relative inline-grid items-center", baseClassName, className)}>
       <Image
-        src="/logo/shanyraq-black.svg"
+        src="/logo/sh-bl-compact.svg"
         alt="Shanyraq"
         width={229}
         height={117}
@@ -44,7 +44,7 @@ export function BrandLogo({
         className="col-start-1 row-start-1 h-auto w-full object-contain opacity-100 transition-opacity duration-200 dark:opacity-0"
       />
       <Image
-        src="/logo/shanyraq-white.svg"
+        src="/logo/sh-wh-compact.svg"
         alt="Shanyraq"
         width={364}
         height={116}
