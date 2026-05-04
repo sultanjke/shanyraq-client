@@ -16,6 +16,14 @@ Shanyraq is a full-stack pilot MVP for transparent apartment construction and bu
 - Hash-chain audit log and simulated red-flag rules
 - Vitest unit tests and Playwright E2E tests
 
+## Project Documentation
+
+| Document | Purpose |
+| --- | --- |
+| [Architecture diagrams](docs/architecture-diagrams.md) | Use-case, sequence, class, and ER diagrams for the Shanyraq system architecture. |
+| [Competitive analysis](docs/competitive-analysis.md) | Competitor benchmarking, SWOT analysis, opportunities, differentiators, and success benchmarks. |
+| [Statistical analysis](docs/statistical-analysis.md) | Project-related statistical context, indicators, assumptions, and evaluation framing. |
+
 ## Demo Accounts
 
 | Role | Email | Password |
