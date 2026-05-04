@@ -6,9 +6,26 @@ import { Button } from "@/components/ui/button";
 
 type Theme = "dark" | "light";
 
-function applyTheme(theme: Theme) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
+let transitionTimeout: number | undefined;
+
+function syncTheme(theme: Theme) {
+  const root = document.documentElement;
+  root.classList.toggle("dark", theme === "dark");
   window.localStorage.setItem("shanyraq-theme", theme);
+}
+
+function applyTheme(theme: Theme, animate = false) {
+  const root = document.documentElement;
+
+  if (animate) {
+    root.classList.add("theme-transitioning");
+    window.clearTimeout(transitionTimeout);
+    transitionTimeout = window.setTimeout(() => {
+      root.classList.remove("theme-transitioning");
+    }, 280);
+  }
+
+  syncTheme(theme);
 }
 
 export function ThemeToggle() {
@@ -19,13 +36,13 @@ export function ThemeToggle() {
   });
 
   useEffect(() => {
-    applyTheme(theme);
+    syncTheme(theme);
   }, [theme]);
 
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
-    applyTheme(nextTheme);
+    applyTheme(nextTheme, true);
   }
 
   return (
@@ -37,8 +54,10 @@ export function ThemeToggle() {
       aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
       title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
     >
-      <Sun className="hidden h-4 w-4 dark:block" />
-      <Moon className="h-4 w-4 dark:hidden" />
+      <span className="relative h-4 w-4">
+        <Sun className="absolute inset-0 h-4 w-4 opacity-0 transition-opacity duration-200 dark:opacity-100" />
+        <Moon className="absolute inset-0 h-4 w-4 opacity-100 transition-opacity duration-200 dark:opacity-0" />
+      </span>
     </Button>
   );
 }

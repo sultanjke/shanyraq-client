@@ -354,8 +354,415 @@ export const dictionaries = {
   },
 } as const;
 
+export const registerDictionaries = {
+  en: {
+    title: "Request access",
+    subtitle:
+      "Create a pending request for a building. A manager or auditor reviews your role, unit, and evidence before the account becomes active.",
+    fullName: "Full name",
+    email: "Email",
+    password: "Password",
+    requestedRole: "Requested role",
+    roles: {
+      resident: "Resident",
+      manager: "Manager",
+      contractor: "Contractor",
+      auditor: "Auditor",
+    },
+    buildingMembership: "Building membership",
+    building: "Building",
+    chooseBuilding: "Choose building",
+    registerAnotherComplex: "Register another complex",
+    complexName: "Complex name",
+    city: "City",
+    address: "Address",
+    unit: "Unit or apartment",
+    unitPlaceholder: "12B",
+    organization: "Organization",
+    organizationPlaceholder: "For managers, contractors, auditors",
+    evidence: "Access evidence",
+    evidencePlaceholder:
+      "Example: owner of unit 12B, contract reference, audit assignment, or management agreement.",
+    duplicateError: "This email already has an account or pending request.",
+    genericError: "Check the form and try again.",
+    submit: "Submit access request",
+    backToSignIn: "Back to sign in",
+  },
+  ru: {
+    title: "Запросить доступ",
+    subtitle:
+      "Создайте заявку на доступ к дому. Управляющий или аудитор проверит вашу роль, квартиру и подтверждение перед активацией аккаунта.",
+    fullName: "Полное имя",
+    email: "Email",
+    password: "Пароль",
+    requestedRole: "Запрашиваемая роль",
+    roles: {
+      resident: "Житель",
+      manager: "Управляющий",
+      contractor: "Подрядчик",
+      auditor: "Аудитор",
+    },
+    buildingMembership: "Доступ к дому",
+    building: "Дом",
+    chooseBuilding: "Выберите дом",
+    registerAnotherComplex: "Зарегистрировать другой комплекс",
+    complexName: "Название комплекса",
+    city: "Город",
+    address: "Адрес",
+    unit: "Квартира или блок",
+    unitPlaceholder: "12B",
+    organization: "Организация",
+    organizationPlaceholder: "Для управляющих, подрядчиков и аудиторов",
+    evidence: "Подтверждение доступа",
+    evidencePlaceholder:
+      "Например: собственник квартиры 12B, номер договора, аудиторское назначение или договор управления.",
+    duplicateError: "У этого email уже есть аккаунт или активная заявка.",
+    genericError: "Проверьте форму и попробуйте снова.",
+    submit: "Отправить заявку",
+    backToSignIn: "Вернуться ко входу",
+  },
+  kk: {
+    title: "Қолжетімділік сұрау",
+    subtitle:
+      "Үйге кіру үшін өтінім жасаңыз. Аккаунт белсендірілмес бұрын басқарушы немесе аудитор рөліңізді, пәтеріңізді және дәлеліңізді тексереді.",
+    fullName: "Толық аты-жөні",
+    email: "Email",
+    password: "Құпиясөз",
+    requestedRole: "Сұралған рөл",
+    roles: {
+      resident: "Тұрғын",
+      manager: "Басқарушы",
+      contractor: "Мердігер",
+      auditor: "Аудитор",
+    },
+    buildingMembership: "Үйге мүшелік",
+    building: "Үй",
+    chooseBuilding: "Үйді таңдаңыз",
+    registerAnotherComplex: "Басқа кешенді тіркеу",
+    complexName: "Кешен атауы",
+    city: "Қала",
+    address: "Мекенжай",
+    unit: "Пәтер немесе блок",
+    unitPlaceholder: "12B",
+    organization: "Ұйым",
+    organizationPlaceholder: "Басқарушылар, мердігерлер және аудиторлар үшін",
+    evidence: "Қолжетімділік дәлелі",
+    evidencePlaceholder:
+      "Мысалы: 12B пәтерінің иесі, келісімшарт нөмірі, аудит тағайындауы немесе басқару келісімі.",
+    duplicateError: "Бұл email үшін аккаунт немесе белсенді өтінім бұрыннан бар.",
+    genericError: "Форманы тексеріп, қайта көріңіз.",
+    submit: "Өтінімді жіберу",
+    backToSignIn: "Кіру бетіне қайту",
+  },
+} as const;
+
+export const landingDictionaries = {
+  en: {
+    navLabel: "Public navigation",
+    badgeLabel: "Beta Access",
+    heroTitle: "Transparent apartment governance for Kazakhstan.",
+    heroSubtitle:
+      "Shanyraq connects land documents, construction permits, expenses, resident approvals, red flags, and hash-chain audit logs in one building workspace.",
+    primaryCta: "Sign in",
+    secondaryCta: "Request access",
+    metrics: ["Transparency score", "Open risks", "Verified documents", "Visible expenses"],
+    previewApprovalTitle: "Elevator contract re-tender",
+    previewApprovalSubtitle: "Residents vote after a single-bid price variance.",
+    previewQuorum: "Quorum target",
+    previewRiskTitle: "Risk register",
+    previewRisks: ["Land-use mismatch", "Single-bid procurement"],
+    criticalLabel: "Critical",
+    reviewLabel: "Review",
+    previewAuditTitle: "Latest audit events",
+    hashChainLabel: "Hash-chain",
+    previewAuditVote: "Resident voted yes on approval",
+    previewAuditFinance: "Manager published finance evidence",
+    trustEyebrow: "Risk reduction",
+    trustTitle: "Designed around the weak points in apartment construction and management.",
+    trustSubtitle:
+      "The prototype makes high-risk records visible to residents, managers, contractors, and auditors before problems disappear into paperwork.",
+    risks: [
+      {
+        title: "Land-use mismatch",
+        description: "Compare cadastral and permit evidence against approved apartment construction use.",
+      },
+      {
+        title: "Missing permits",
+        description: "Keep project, permit, and land documents versioned with file hashes and review statuses.",
+      },
+      {
+        title: "Single-bid procurement",
+        description: "Expose tender competition, benchmark prices, and contract variance in a readable view.",
+      },
+      {
+        title: "Expense without approval",
+        description: "Connect resident decisions to financial records and make every action auditable.",
+      },
+    ],
+    featuresEyebrow: "Capabilities",
+    featuresTitle: "A practical transparency toolkit, not a paper archive.",
+    featuresSubtitle:
+      "Every core module is tied to a role, a building, and an audit event so the system can show what changed, who changed it, and why.",
+    features: [
+      {
+        title: "Document repository",
+        description: "Land, project, permit, and management files with versions, SHA-256 hashes, and statuses.",
+      },
+      {
+        title: "Financial reporting",
+        description: "Published expenses, procurement context, vendors, categories, and visible KZT amounts.",
+      },
+      {
+        title: "Resident voting",
+        description: "One account, one vote approvals with quorum progress and decision history.",
+      },
+      {
+        title: "Risk checks",
+        description: "Explainable simulated rules flag land, permit, procurement, and price-variance concerns.",
+      },
+      {
+        title: "Hash-chain audit",
+        description: "Append-only events store previous hashes, event hashes, actors, actions, and metadata.",
+      },
+      {
+        title: "Role-based access",
+        description: "Residents, managers, contractors, and auditors get different screens and permissions.",
+      },
+    ],
+    rolesEyebrow: "Roles",
+    rolesTitle: "Each participant sees the work they are responsible for.",
+    roles: [
+      {
+        title: "Residents",
+        description: "Inspect records, track expenses, review decisions, and vote on approvals.",
+      },
+      {
+        title: "Managers",
+        description: "Upload reports, publish financial records, create approvals, and review access.",
+      },
+      {
+        title: "Contractors",
+        description: "Upload delivery evidence and follow procurement records assigned to their work.",
+      },
+      {
+        title: "Auditors",
+        description: "Verify documents, run red-flag checks, and inspect audit-chain integrity.",
+      },
+    ],
+    finalTitle: "Start with the Baiterek 24 demo workspace.",
+    finalSubtitle:
+      "Use the existing pilot data to inspect the platform, or request access for another apartment complex.",
+    finalPrimaryCta: "Start demo",
+    finalSecondaryCta: "Request another complex",
+  },
+  ru: {
+    navLabel: "Публичная навигация",
+    badgeLabel: "Бета-доступ",
+    heroTitle: "Прозрачное управление многоквартирными домами в Казахстане.",
+    heroSubtitle:
+      "Shanyraq связывает земельные документы, разрешения, расходы, голосования жителей, риск-флаги и хэш-цепочку аудита в одном пространстве дома.",
+    primaryCta: "Войти",
+    secondaryCta: "Запросить доступ",
+    metrics: ["Индекс прозрачности", "Открытые риски", "Проверенные документы", "Открытые расходы"],
+    previewApprovalTitle: "Повторный тендер по лифтам",
+    previewApprovalSubtitle: "Жители голосуют после отклонения цены и одного участника.",
+    previewQuorum: "Цель кворума",
+    previewRiskTitle: "Реестр рисков",
+    previewRisks: ["Несоответствие назначения земли", "Закупка с одним участником"],
+    criticalLabel: "Критично",
+    reviewLabel: "Проверка",
+    previewAuditTitle: "Последние события аудита",
+    hashChainLabel: "Хэш-цепочка",
+    previewAuditVote: "Житель проголосовал за решение",
+    previewAuditFinance: "Управляющий опубликовал финансовые данные",
+    trustEyebrow: "Снижение рисков",
+    trustTitle: "Система спроектирована вокруг слабых мест строительства и управления домом.",
+    trustSubtitle:
+      "Прототип делает рискованные записи видимыми для жителей, управляющих, подрядчиков и аудиторов до того, как проблемы теряются в документах.",
+    risks: [
+      {
+        title: "Несоответствие земли",
+        description: "Сравнение кадастровых и разрешительных данных с назначением под многоквартирный дом.",
+      },
+      {
+        title: "Отсутствие разрешений",
+        description: "Версионирование проектных, разрешительных и земельных документов с хэшами файлов.",
+      },
+      {
+        title: "Один участник закупки",
+        description: "Показывает конкуренцию, ориентир цены и отклонение контракта от бенчмарка.",
+      },
+      {
+        title: "Расход без решения",
+        description: "Связывает решения жителей с финансовыми записями и аудируемыми действиями.",
+      },
+    ],
+    featuresEyebrow: "Возможности",
+    featuresTitle: "Практичный инструмент прозрачности, а не просто архив документов.",
+    featuresSubtitle:
+      "Каждый модуль связан с ролью, домом и событием аудита, чтобы было видно, что изменилось, кто изменил и почему.",
+    features: [
+      {
+        title: "Репозиторий документов",
+        description: "Земля, проект, разрешения и отчеты с версиями, SHA-256 хэшами и статусами.",
+      },
+      {
+        title: "Финансовая отчетность",
+        description: "Опубликованные расходы, закупки, поставщики, категории и суммы в KZT.",
+      },
+      {
+        title: "Голосование жителей",
+        description: "Один аккаунт, один голос, прогресс кворума и история решений.",
+      },
+      {
+        title: "Проверки рисков",
+        description: "Понятные правила отмечают проблемы с землей, разрешениями, закупками и ценами.",
+      },
+      {
+        title: "Хэш-цепочка аудита",
+        description: "События хранят предыдущий хэш, хэш события, участника, действие и метаданные.",
+      },
+      {
+        title: "Ролевой доступ",
+        description: "Жители, управляющие, подрядчики и аудиторы получают разные экраны и права.",
+      },
+    ],
+    rolesEyebrow: "Роли",
+    rolesTitle: "Каждый участник видит свою зону ответственности.",
+    roles: [
+      {
+        title: "Жители",
+        description: "Проверяют записи, следят за расходами, смотрят решения и голосуют.",
+      },
+      {
+        title: "Управляющие",
+        description: "Загружают отчеты, публикуют финансы, создают решения и проверяют доступ.",
+      },
+      {
+        title: "Подрядчики",
+        description: "Загружают доказательства работ и видят связанные закупки.",
+      },
+      {
+        title: "Аудиторы",
+        description: "Проверяют документы, запускают риск-флаги и смотрят целостность аудита.",
+      },
+    ],
+    finalTitle: "Начните с демо-пространства Baiterek 24.",
+    finalSubtitle:
+      "Используйте пилотные данные для проверки платформы или запросите доступ для другого жилого комплекса.",
+    finalPrimaryCta: "Открыть демо",
+    finalSecondaryCta: "Запросить другой комплекс",
+  },
+  kk: {
+    navLabel: "Ашық навигация",
+    badgeLabel: "Бета қолжетімділік",
+    heroTitle: "Қазақстандағы көппәтерлі үйді ашық басқару платформасы.",
+    heroSubtitle:
+      "Shanyraq жер құжаттарын, рұқсаттарды, шығындарды, тұрғын дауысын, тәуекел белгілерін және аудит хэш-тізбегін бір үй кеңістігіне біріктіреді.",
+    primaryCta: "Кіру",
+    secondaryCta: "Қолжетімділік сұрау",
+    metrics: ["Ашықтық көрсеткіші", "Ашық тәуекелдер", "Тексерілген құжаттар", "Көрінетін шығындар"],
+    previewApprovalTitle: "Лифт келісіміне қайта тендер",
+    previewApprovalSubtitle: "Бір қатысушы және баға ауытқуы болғанда тұрғындар дауыс береді.",
+    previewQuorum: "Кворум мақсаты",
+    previewRiskTitle: "Тәуекел тізілімі",
+    previewRisks: ["Жер мақсаты сәйкес емес", "Бір қатысушы бар сатып алу"],
+    criticalLabel: "Маңызды",
+    reviewLabel: "Тексеру",
+    previewAuditTitle: "Соңғы аудит оқиғалары",
+    hashChainLabel: "Хэш-тізбек",
+    previewAuditVote: "Тұрғын шешімді қолдады",
+    previewAuditFinance: "Басқарушы қаржы дәлелін жариялады",
+    trustEyebrow: "Тәуекелді азайту",
+    trustTitle: "Жүйе құрылыс пен үй басқаруындағы әлсіз тұстарға бағытталған.",
+    trustSubtitle:
+      "Прототип қауіпті жазбаларды тұрғындарға, басқарушыларға, мердігерлерге және аудиторларға құжат арасында жоғалмай тұрып көрсетеді.",
+    risks: [
+      {
+        title: "Жер мақсаты сәйкес емес",
+        description: "Кадастр және рұқсат деректерін көппәтерлі үй құрылысы мақсатына салыстыру.",
+      },
+      {
+        title: "Рұқсат жоқ",
+        description: "Жоба, рұқсат және жер құжаттарын нұсқамен, файл хэшімен және мәртебемен сақтау.",
+      },
+      {
+        title: "Бір қатысушы сатып алу",
+        description: "Бәсеке деңгейін, нарықтық бағдарды және келісім бағасының ауытқуын көрсету.",
+      },
+      {
+        title: "Шешімсіз шығын",
+        description: "Тұрғын шешімдерін қаржы жазбаларымен және аудит оқиғаларымен байланыстыру.",
+      },
+    ],
+    featuresEyebrow: "Мүмкіндіктер",
+    featuresTitle: "Құжат архиві емес, нақты ашықтық құралы.",
+    featuresSubtitle:
+      "Әр модуль рөлге, үйге және аудит оқиғасына байланған, сондықтан не өзгергені, кім өзгерткені және себебі көрінеді.",
+    features: [
+      {
+        title: "Құжат репозиторийі",
+        description: "Жер, жоба, рұқсат және есептер нұсқамен, SHA-256 хэшпен және мәртебемен.",
+      },
+      {
+        title: "Қаржы есебі",
+        description: "Жарияланған шығындар, сатып алу контексті, жеткізушілер, санаттар және KZT сомалары.",
+      },
+      {
+        title: "Тұрғын дауыс беруі",
+        description: "Бір аккаунт, бір дауыс, кворум прогресі және шешім тарихы.",
+      },
+      {
+        title: "Тәуекел тексерулері",
+        description: "Жер, рұқсат, сатып алу және баға ауытқуы бойынша түсінікті ережелер.",
+      },
+      {
+        title: "Аудит хэш-тізбегі",
+        description: "Оқиғалар алдыңғы хэшті, оқиға хэшін, қатысушыны, әрекетті және метадеректі сақтайды.",
+      },
+      {
+        title: "Рөлдік қолжетімділік",
+        description: "Тұрғын, басқарушы, мердігер және аудитор үшін әртүрлі экрандар мен құқықтар.",
+      },
+    ],
+    rolesEyebrow: "Рөлдер",
+    rolesTitle: "Әр қатысушы өз жауапкершілік аймағын көреді.",
+    roles: [
+      {
+        title: "Тұрғындар",
+        description: "Жазбаларды, шығындарды, шешімдерді қарап, дауыс береді.",
+      },
+      {
+        title: "Басқарушылар",
+        description: "Есептерді жүктейді, қаржыны жариялайды, шешім құрып, қолжетімділікті қарайды.",
+      },
+      {
+        title: "Мердігерлер",
+        description: "Жұмыс дәлелдерін жүктеп, байланысты сатып алу жазбаларын көреді.",
+      },
+      {
+        title: "Аудиторлар",
+        description: "Құжаттарды тексеріп, тәуекел белгілерін іске қосады және аудит тұтастығын қарайды.",
+      },
+    ],
+    finalTitle: "Baiterek 24 демо кеңістігінен бастаңыз.",
+    finalSubtitle:
+      "Платформаны пилоттық деректермен тексеріңіз немесе басқа тұрғын үй кешені үшін қолжетімділік сұраңыз.",
+    finalPrimaryCta: "Демоны ашу",
+    finalSecondaryCta: "Басқа кешен сұрау",
+  },
+} as const;
+
 export function getDictionary(locale: Locale) {
   return dictionaries[locale];
+}
+
+export function getRegisterDictionary(locale: Locale) {
+  return registerDictionaries[locale];
+}
+
+export function getLandingDictionary(locale: Locale) {
+  return landingDictionaries[locale];
 }
 
 export function roleLabel(role: UserRole | "system", locale: Locale) {

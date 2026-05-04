@@ -8,16 +8,18 @@ export function BrandLogo({
   className?: string;
   variant?: "full" | "mark";
 }) {
+  const baseClassName = variant === "mark" ? "w-14" : "w-40";
+
   if (variant === "mark") {
     return (
-      <>
+      <span className={cn("relative inline-grid items-center", baseClassName, className)}>
         <Image
           src="/logo/shanyraq-black.svg"
           alt="Shanyraq"
           width={205}
           height={117}
           priority
-          className={cn("h-auto w-14 object-contain dark:hidden", className)}
+          className="col-start-1 row-start-1 h-auto w-full object-contain opacity-100 transition-opacity duration-200 dark:opacity-0"
         />
         <Image
           src="/logo/shanyraq-white.svg"
@@ -25,21 +27,21 @@ export function BrandLogo({
           width={229}
           height={117}
           priority
-          className={cn("hidden h-auto w-14 object-contain dark:block", className)}
+          className="col-start-1 row-start-1 h-auto w-full object-contain opacity-0 transition-opacity duration-200 dark:opacity-100"
         />
-      </>
+      </span>
     );
   }
 
   return (
-    <>
+    <span className={cn("relative inline-grid items-center", baseClassName, className)}>
       <Image
         src="/logo/shanyraq-black.svg"
         alt="Shanyraq"
         width={229}
         height={117}
         priority
-        className={cn("h-auto w-40 object-contain dark:hidden", className)}
+        className="col-start-1 row-start-1 h-auto w-full object-contain opacity-100 transition-opacity duration-200 dark:opacity-0"
       />
       <Image
         src="/logo/shanyraq-white.svg"
@@ -47,8 +49,8 @@ export function BrandLogo({
         width={364}
         height={116}
         priority
-        className={cn("hidden h-auto w-40 object-contain dark:block", className)}
+        className="col-start-1 row-start-1 h-auto w-full object-contain opacity-0 transition-opacity duration-200 dark:opacity-100"
       />
-    </>
+    </span>
   );
 }

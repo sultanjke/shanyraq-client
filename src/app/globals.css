@@ -121,6 +121,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition-duration: 220ms;
+    transition-property: background-color, border-color, box-shadow, color, fill, opacity, stroke, text-decoration-color;
+    transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -132,6 +140,55 @@
 @layer utilities {
   .dashboard-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .logo-pixel-backdrop {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    padding: 0.35rem 0.55rem;
+  }
+
+  .logo-pixel-backdrop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid color-mix(in oklch, var(--border) 72%, transparent);
+    background-image:
+      linear-gradient(90deg, color-mix(in oklch, var(--foreground) 10%, transparent) 1px, transparent 1px),
+      linear-gradient(color-mix(in oklch, var(--foreground) 10%, transparent) 1px, transparent 1px),
+      linear-gradient(135deg, color-mix(in oklch, var(--primary) 18%, transparent), transparent 58%);
+    background-position:
+      -1px -1px,
+      -1px -1px,
+      0 0;
+    background-size:
+      8px 8px,
+      8px 8px,
+      100% 100%;
+    image-rendering: pixelated;
+    mask-image: linear-gradient(90deg, black 62%, transparent);
+    opacity: 0.82;
+  }
+
+  .logo-pixel-backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, color-mix(in oklch, var(--background) 92%, transparent), transparent),
+      repeating-linear-gradient(
+        45deg,
+        color-mix(in oklch, var(--primary) 18%, transparent) 0 4px,
+        transparent 4px 8px
+      );
+    opacity: 0.45;
+    image-rendering: pixelated;
   }
 
   .auth-logo-enter {
@@ -167,6 +224,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition-duration: 0ms;
+  }
+
   .auth-logo-enter,
   .auth-card-enter {
     animation: none;
