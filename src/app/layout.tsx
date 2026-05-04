@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: "Shanyraq",
   description:
     "A role-based apartment construction and management transparency MVP for Kazakhstan.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

@@ -10,6 +10,9 @@ async function login(page: Page, email: string, password: string) {
 }
 
 test("public landing page exposes localized entry points", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/en$/);
+
   await page.goto("/en");
   await expect(page).toHaveURL(/\/en$/);
   await expect(page.getByRole("heading", { name: /Transparent apartment governance/ })).toBeVisible();

@@ -84,7 +84,7 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
             <Badge variant="secondary" className="mb-5 w-fit gap-2 bg-blue-600 text-white">
               {landing.badgeLabel}
             </Badge>
-            <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-4xl text-xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
               {landing.heroTitle}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
