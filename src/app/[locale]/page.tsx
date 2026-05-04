@@ -81,7 +81,7 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
         />
         <div className="relative z-10 mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl content-center gap-10 px-4 py-12 lg:grid-cols-[0.92fr_1.08fr] lg:px-8 lg:py-16">
           <div className="flex flex-col justify-center">
-            <Badge variant="secondary" className="mb-5 w-fit gap-2 bg-blue-600">
+            <Badge variant="secondary" className="mb-5 w-fit gap-2 bg-blue-600 text-white">
               {landing.badgeLabel}
             </Badge>
             <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
