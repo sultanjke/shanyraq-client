@@ -74,7 +74,7 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
             </Badge>
             <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
               {landing.heroTitleLead}{" "}
-              <FlipWords words={landing.heroFlipWords} className="text-blue-600 dark:text-blue-400" />
+              <FlipWords words={landing.heroFlipWords} className="text-blue-600 dark:text-blue-600" />
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
               {landing.heroSubtitle}
