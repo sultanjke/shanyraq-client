@@ -10,6 +10,8 @@ interface BorderBeamProps {
   duration?: number
   lightColor?: string
   borderWidth?: number
+  /** Px to grow (negative) or shrink the overlay. Use a negative value to ride the outer border box. */
+  inset?: number
   className?: string
   [key: string]: unknown
 }
@@ -19,6 +21,7 @@ export function BorderBeam({
   duration = 10,
   lightColor = "#FAFAFA",
   borderWidth = 1,
+  inset = 0,
   className,
   ...props
 }: BorderBeamProps) {
@@ -27,10 +30,16 @@ export function BorderBeam({
   const updatePath = () => {
     if (pathRef.current) {
       const div = pathRef.current
-      div.style.setProperty(
-        "--path",
-        `path("M 0 0 H ${div.offsetWidth} V ${div.offsetHeight} H 0 V 0")`
-      )
+      const w = div.offsetWidth
+      const h = div.offsetHeight
+      // Follow the element's actual rounded corners so the beam rides the outline.
+      const radius = parseFloat(getComputedStyle(div).borderTopLeftRadius) || 0
+      const r = Math.min(radius, w / 2, h / 2)
+      const path =
+        r > 0
+          ? `path("M ${r} 0 H ${w - r} A ${r} ${r} 0 0 1 ${w} ${r} V ${h - r} A ${r} ${r} 0 0 1 ${w - r} ${h} H ${r} A ${r} ${r} 0 0 1 0 ${h - r} V ${r} A ${r} ${r} 0 0 1 ${r} 0 Z")`
+          : `path("M 0 0 H ${w} V ${h} H 0 V 0")`
+      div.style.setProperty("--path", path)
     }
   }
 
@@ -49,11 +58,12 @@ export function BorderBeam({
         {
           "--duration": duration,
           "--border-width": `${borderWidth}px`,
+          inset: `${inset}px`,
         } as CSSProperties
       }
       ref={pathRef}
       className={cn(
-        `absolute inset-0 z-0 h-full w-full rounded-[inherit]`,
+        `absolute z-0 rounded-[inherit]`,
         `after:absolute after:inset-[var(--border-width)] after:rounded-[inherit] after:content-['']`,
         "border-[length:var(--border-width)] ![mask-clip:padding-box,border-box]",
         "![mask-composite:intersect] [mask:linear-gradient(transparent,transparent),linear-gradient(red,red)]",

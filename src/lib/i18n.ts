@@ -460,7 +460,8 @@ export const landingDictionaries = {
   en: {
     navLabel: "Public navigation",
     badgeLabel: "Beta Access",
-    heroTitle: "Transparent apartment governance for Kazakhstan.",
+    heroTitleLead: "One shared evidence base for",
+    heroFlipWords: ["residents", "managers", "contractors", "auditors"],
     heroSubtitle:
       "Shanyraq connects land documents, construction permits, expenses, resident approvals, red flags, and hash-chain audit logs in one building workspace.",
     primaryCta: "Sign in",
@@ -558,7 +559,8 @@ export const landingDictionaries = {
   ru: {
     navLabel: "Публичная навигация",
     badgeLabel: "Бета-доступ",
-    heroTitle: "Прозрачное управление многоквартирными домами в Казахстане.",
+    heroTitleLead: "Единая база доказательств для",
+    heroFlipWords: ["жителей", "управляющих", "подрядчиков", "аудиторов"],
     heroSubtitle:
       "Shanyraq связывает земельные документы, разрешения, расходы, голосования жителей, риск-флаги и хэш-цепочку аудита в одном пространстве дома.",
     primaryCta: "Войти",
@@ -656,7 +658,8 @@ export const landingDictionaries = {
   kk: {
     navLabel: "Ашық навигация",
     badgeLabel: "Бета қолжетімділік",
-    heroTitle: "Қазақстандағы көппәтерлі үйді ашық басқару платформасы.",
+    heroTitleLead: "Ортақ дәлелдер базасы:",
+    heroFlipWords: ["тұрғындар", "басқарушылар", "мердігерлер", "аудиторлар"],
     heroSubtitle:
       "Shanyraq жер құжаттарын, рұқсаттарды, шығындарды, тұрғын дауысын, тәуекел белгілерін және аудит хэш-тізбегін бір үй кеңістігіне біріктіреді.",
     primaryCta: "Кіру",

@@ -12,14 +12,14 @@ import {
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
-import { BrandLogo } from "@/components/app/brand-logo";
-import { LanguageSwitcher } from "@/components/app/language-switcher";
-import { ThemeToggle } from "@/components/app/theme-toggle";
+import { SiteNavbar } from "@/components/app/site-navbar";
+import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import { Badge } from "@/components/ui/badge";
 import { Background } from "@/components/ui/background";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { FlipWords } from "@/components/ui/flip-words";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { isLocale, type Locale } from "@/lib/domain";
@@ -37,25 +37,13 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 lg:px-8">
-          <Link href={`/${locale}`} aria-label={dictionary.appName}>
-            <BrandLogo className="w-20 m-2" />
-          </Link>
-          <nav className="hidden items-center gap-2 md:flex" aria-label={landing.navLabel}>
-            <Button asChild variant="ghost">
-              <Link href={`/${locale}/login`}>{landing.primaryCta}</Link>
-            </Button>
-            <Button asChild>
-              <Link href={`/${locale}/register`}>{landing.secondaryCta}</Link>
-            </Button>
-          </nav>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <LanguageSwitcher locale={locale} />
-          </div>
-        </div>
-      </header>
+      <SiteNavbar
+        locale={locale}
+        appName={dictionary.appName}
+        navLabel={landing.navLabel}
+        signInLabel={landing.primaryCta}
+        requestAccessLabel={landing.secondaryCta}
+      />
       <section className="relative overflow-hidden border-b border-border">
         <Background
           fill
@@ -85,7 +73,8 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
               {landing.badgeLabel}
             </Badge>
             <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              {landing.heroTitle}
+              {landing.heroTitleLead}{" "}
+              <FlipWords words={landing.heroFlipWords} className="text-blue-600 dark:text-blue-400" />
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
               {landing.heroSubtitle}
@@ -107,26 +96,30 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
           </div>
 
           <div className="relative">
-            <div className="rounded-lg border border-border bg-card/80 p-3 shadow-2xl shadow-black/10 sm:p-4">
-              <div className="rounded-md border border-border bg-background">
+            <CardContainer containerClassName="w-full py-0" className="w-full">
+              <CardItem
+                as="div"
+                translateZ={40}
+                className="w-full rounded-md border border-border bg-background shadow-xl shadow-black/10 [transform-style:preserve-3d]"
+              >
                 <div className="flex items-center justify-between border-b border-border px-4 py-3">
-                  <div className="flex items-center gap-2">
+                  <CardItem as="div" translateZ={30} className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  </div>
+                  </CardItem>
                 </div>
-                <div className="grid gap-4 p-4">
-                  <div className="grid gap-3 sm:grid-cols-4">
+                <div className="grid gap-4 p-4 [transform-style:preserve-3d]">
+                  <CardItem as="div" translateZ={60} className="grid w-full gap-3 sm:grid-cols-4">
                     {landing.metrics.map((metric, index) => (
                       <div key={metric} className="rounded-md border border-border bg-card p-3">
                         <p className="text-xs text-muted-foreground">{metric}</p>
                         <p className="mt-2 text-xl font-semibold">{metricValues[index]}</p>
                       </div>
                     ))}
-                  </div>
+                  </CardItem>
 
-                  <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+                  <CardItem as="div" translateZ={50} className="grid w-full gap-4 lg:grid-cols-[0.9fr_1.1fr]">
                     <div className="rounded-md border border-border bg-card p-4">
                       <div className="flex items-center justify-between gap-3">
                         <div>
@@ -158,9 +151,9 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </CardItem>
 
-                  <div className="rounded-md border border-border bg-card p-4">
+                  <CardItem as="div" translateZ={50} className="w-full rounded-md border border-border bg-card p-4">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-sm font-medium">{landing.previewAuditTitle}</p>
                       <Badge variant="outline">{landing.hashChainLabel}</Badge>
@@ -177,10 +170,10 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
                         <span className="truncate">5f39a30d</span>
                       </div>
                     </div>
-                  </div>
+                  </CardItem>
                 </div>
-              </div>
-            </div>
+              </CardItem>
+            </CardContainer>
           </div>
         </div>
       </section>
